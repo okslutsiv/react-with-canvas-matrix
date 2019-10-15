@@ -1,26 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useRef, useState, useEffect } from "react";
+import styled from "styled-components";
+import SineLine from "./SineLine";
+import Matrix from "./Matrix";
+
+const baseColors = [
+  "#026592",
+  "#94bfd2",
+  "#91a4a2",
+  "#247067",
+  "#38b1d4",
+  "#fcffff",
+  "#a18999",
+  "#95c092",
+  "#88dfe4",
+];
 
 function App() {
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const containerRef = useRef(null);
+  useEffect(() => {
+    const container = containerRef.current;
+    setDimensions({
+      width: container.offsetWidth,
+      height: container.offsetHeight,
+    });
+
+    const handleWindowResize = () => {
+      setDimensions({
+        width: container.offsetWidth,
+        height: container.offsetHeight,
+      });
+    };
+    window.addEventListener("resize", handleWindowResize);
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, [containerRef]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Main ref={containerRef}>
+      <Matrix width={dimensions.width} height={dimensions.height}></Matrix>
+      {/* <SineLine
+        colors={baseColors}
+        width={dimensions.width}
+        height={dimensions.height}
+        startY={dimensions.height / 2}
+        length={100}
+        amplitude={100}
+      ></SineLine> */}
+    </Main>
   );
 }
 
 export default App;
+
+const Main = styled.div`
+  width: 100vw;
+  height: 100vh;
+  ${"" /* background: #005; */}
+`;
